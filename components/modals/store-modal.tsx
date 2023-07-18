@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { Modal } from "@/components/ui/modal";
@@ -25,6 +28,8 @@ const formSchema = z.object({
 export const StoreModal = () => {
   const storeModal = useStoreModal();
 
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,8 +38,16 @@ export const StoreModal = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    // TODO: create store
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/stores", values);
+
+      toast.success("Store created");
+    } catch (error) {
+      toast.error("Error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -54,7 +67,11 @@ export const StoreModal = () => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="E-Commerce" {...field} />
+                    <Input
+                      placeholder="E-Commerce"
+                      disabled={loading}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -64,11 +81,14 @@ export const StoreModal = () => {
               <Button
                 variant="outline"
                 type="button"
+                disabled={loading}
                 onClick={storeModal.onClose}
               >
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={loading}>
+                Submit
+              </Button>
             </div>
           </form>
         </Form>
