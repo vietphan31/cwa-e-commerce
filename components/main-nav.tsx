@@ -19,6 +19,12 @@ export const MainNav = ({
     {
       href: `/${params.storeId}/billboards`,
       label: "Billboards",
+      nested: true,
+    },
+    {
+      href: `/${params.storeId}/categories`,
+      label: "Categories",
+      nested: true,
     },
     {
       href: `/${params.storeId}/settings`,
@@ -34,7 +40,8 @@ export const MainNav = ({
           href={route.href}
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
-            pathname === route.href
+            pathname === route.href ||
+              (route.nested && pathname.includes(route.href))
               ? "text-black dark:text-white"
               : "text-muted-foreground"
           )}
