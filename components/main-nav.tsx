@@ -27,6 +27,11 @@ export const MainNav = ({
       nested: true,
     },
     {
+      href: `/${params.storeId}/sizes`,
+      label: "Sizes",
+      nested: true,
+    },
+    {
       href: `/${params.storeId}/settings`,
       label: "Settings",
     },
